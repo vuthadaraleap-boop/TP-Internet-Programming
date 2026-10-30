@@ -5,25 +5,18 @@ import { formatDate, seatsLeft } from "../format";
 
 // TODO 1: declare a prop `event` of type CampusEvent (defineProps)
 
-const prop = defineProps({
-  event: {
-    type: Object as () => CampusEvent,
-    required: true
-  }
-});
+const props = defineProps<{ event: CampusEvent }>();
 
 // TODO 2: declare an event `book` that sends the event id (defineEmits)
 
-const emit = defineEmits({
-  book: (id: number) => typeof id === "number"
-});
+const emit = defineEmits<{ (e: "book", id: number): void }>();
 
 // TODO 3: computed values
 //   left       -> seats left (use seatsLeft)
 //   isFull     -> no seat left
 //   almostFull -> 1 to 5 seats left
 
-const left = computed(() => seatsLeft(prop.event));
+const left = computed(() => seatsLeft(props.event));
 const isFull = computed(() => left.value <= 0);
 const almostFull = computed(() => left.value >= 1 && left.value <= 5);
 
@@ -31,16 +24,13 @@ const almostFull = computed(() => left.value >= 1 && left.value <= 5);
 
 <template>
   <!-- TODO 4: replace the hard-coded text with the event's data (use formatDate) -->
-    <p class="category">{{ event.category }}</p>
-    <h2>{{ event.title }}</h2>
-    <p class="meta">{{ formatDate(event.startsAt) }} · {{ event.location }}</p>
 
   <!-- TODO 5: add the class "full" on <article> when the event is full -->
 
   <article class="card" :class="{ full: isFull }">
-    <span class="category">{{ event.category }}</span>
-    <h3>{{ event.title }}</h3>
-    <p>{{ formatDate(event.startsAt) }} · {{ event.location }}</p>
+    <p class="category">{{ event.category }}</p>
+    <h2>{{ event.title }}</h2>
+    <p class="meta">{{ formatDate(event.startsAt) }} · {{ event.location }}</p>
 
     <!-- TODO 6: when full, show only <p class="badge">Full</p>.
          Otherwise show "N seats left" ("1 seat left" for one seat),
